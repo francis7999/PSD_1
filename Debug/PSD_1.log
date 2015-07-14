@@ -1,0 +1,39 @@
+﻿生成启动时间为 2015/7/14 22:46:48。
+     1>项目“E:\课程相关\国创\PSD_1 v2\PSD_1\PSD_1.vcxproj”在节点 2 上(Build 个目标)。
+     1>ClCompile:
+         D:\Program Files (x86)\vs2012\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _WINDOWS /D _DEBUG /D _MBCS /Gm /EHsc /RTC1 /MTd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\PSD_1.pch" /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt PSD_1Dlg.cpp
+         PSD_1Dlg.cpp
+     1>e:\课程相关\国创\psd_1 v2\psd_1\psd_1dlg.cpp(248): warning C4244: “=”: 从“int”转换到“float”，可能丢失数据
+     1>e:\课程相关\国创\psd_1 v2\psd_1\psd_1dlg.cpp(249): warning C4244: “=”: 从“int”转换到“float”，可能丢失数据
+     1>e:\课程相关\国创\psd_1 v2\psd_1\psd_1dlg.cpp(255): warning C4244: “参数”: 从“float”转换到“int”，可能丢失数据
+     1>e:\课程相关\国创\psd_1 v2\psd_1\psd_1dlg.cpp(261): warning C4244: “参数”: 从“float”转换到“int”，可能丢失数据
+     1>e:\课程相关\国创\psd_1 v2\psd_1\psd_1dlg.cpp(262): warning C4244: “参数”: 从“float”转换到“int”，可能丢失数据
+     1>e:\课程相关\国创\psd_1 v2\psd_1\psd_1dlg.cpp(263): warning C4244: “参数”: 从“float”转换到“int”，可能丢失数据
+     1>e:\课程相关\国创\psd_1 v2\psd_1\psd_1dlg.cpp(266): warning C4244: “参数”: 从“float”转换到“int”，可能丢失数据
+     1>e:\课程相关\国创\psd_1 v2\psd_1\psd_1dlg.cpp(267): warning C4244: “参数”: 从“float”转换到“int”，可能丢失数据
+     1>e:\课程相关\国创\psd_1 v2\psd_1\psd_1dlg.cpp(269): warning C4244: “参数”: 从“float”转换到“int”，可能丢失数据
+     1>e:\课程相关\国创\psd_1 v2\psd_1\psd_1dlg.cpp(270): warning C4244: “参数”: 从“float”转换到“int”，可能丢失数据
+     1>e:\课程相关\国创\psd_1 v2\psd_1\psd_1dlg.cpp(279): warning C4244: “参数”: 从“float”转换到“int”，可能丢失数据
+     1>e:\课程相关\国创\psd_1 v2\psd_1\psd_1dlg.cpp(280): warning C4244: “参数”: 从“float”转换到“int”，可能丢失数据
+     1>e:\课程相关\国创\psd_1 v2\psd_1\psd_1dlg.cpp(285): warning C4244: “参数”: 从“float”转换到“int”，可能丢失数据
+     1>e:\课程相关\国创\psd_1 v2\psd_1\psd_1dlg.cpp(286): warning C4244: “参数”: 从“float”转换到“int”，可能丢失数据
+     1>e:\课程相关\国创\psd_1 v2\psd_1\psd_1dlg.cpp(291): warning C4244: “参数”: 从“float”转换到“int”，可能丢失数据
+     1>e:\课程相关\国创\psd_1 v2\psd_1\psd_1dlg.cpp(292): warning C4244: “参数”: 从“float”转换到“int”，可能丢失数据
+     1>e:\课程相关\国创\psd_1 v2\psd_1\psd_1dlg.cpp(297): warning C4244: “参数”: 从“float”转换到“int”，可能丢失数据
+     1>e:\课程相关\国创\psd_1 v2\psd_1\psd_1dlg.cpp(298): warning C4244: “参数”: 从“float”转换到“int”，可能丢失数据
+     1>e:\课程相关\国创\psd_1 v2\psd_1\psd_1dlg.cpp(306): warning C4244: “参数”: 从“float”转换到“int”，可能丢失数据
+     1>e:\课程相关\国创\psd_1 v2\psd_1\psd_1dlg.cpp(311): warning C4244: “参数”: 从“float”转换到“int”，可能丢失数据
+     1>e:\课程相关\国创\psd_1 v2\psd_1\psd_1dlg.cpp(440): warning C4018: “<”: 有符号/无符号不匹配
+     1>e:\课程相关\国创\psd_1 v2\psd_1\psd_1dlg.cpp(593): warning C4018: “<”: 有符号/无符号不匹配
+       Link:
+         D:\Program Files (x86)\vs2012\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"E:\课程相关\国创\PSD_1 v2\Debug\PSD_1.exe" /INCREMENTAL /NOLOGO canusbdrv.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /manifestinput:"D:\Program Files (x86)\vs2012\VC\Include\Manifest\dpiaware.manifest" /DEBUG /PDB:"E:\课程相关\国创\PSD_1 v2\Debug\PSD_1.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\课程相关\国创\PSD_1 v2\Debug\PSD_1.lib" /MACHINE:X86 Debug\PSD_1.res
+         Debug\LawicelCanUsb.obj
+         Debug\PSD_1.obj
+         Debug\PSD_1Dlg.obj
+         Debug\stdafx.obj
+         PSD_1.vcxproj -> E:\课程相关\国创\PSD_1 v2\Debug\PSD_1.exe
+     1>已完成生成项目“E:\课程相关\国创\PSD_1 v2\PSD_1\PSD_1.vcxproj”(Build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:02.97
