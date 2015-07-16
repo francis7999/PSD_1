@@ -106,6 +106,7 @@ BEGIN_MESSAGE_MAP(CPSD_1Dlg, CDialogEx)
 	ON_BN_CLICKED(IDC_QUXIAOZHILING, &CPSD_1Dlg::OnBnClickedQuxiaozhiling)
 	ON_BN_CLICKED(IDC_FUWEI, &CPSD_1Dlg::OnBnClickedFuwei)
 	ON_BN_CLICKED(IDC_LIANJIESHEBEI, &CPSD_1Dlg::OnBnClickedLianjieshebei)
+	ON_BN_CLICKED(IDCANCEL, &CPSD_1Dlg::OnBnClickedCancel)
 END_MESSAGE_MAP()
 
 
@@ -303,7 +304,7 @@ void CPSD_1Dlg::HuiZhiZuoBiaoXi()
 	brush.CreateSolidBrush(RGB(255,0,0));
 	pOldBrush=MemDC.SelectObject(&brush); 
 
-	MemDC.Ellipse((*m_iChX)*PerWeight+StWidth/2-7,StHeight/2-7-(*m_iChY)*PerHeight,(*m_iChX)*PerWeight+StWidth/2+7,StHeight/2+7-(*m_iChY)*PerHeight);//psd的位置点
+	MemDC.Ellipse((*m_iChX)*PerWeight+StWidth/2-5,StHeight/2-5-(*m_iChY)*PerHeight,(*m_iChX)*PerWeight+StWidth/2+5,StHeight/2+5-(*m_iChY)*PerHeight);//psd的位置点
 	MemDC.SelectObject(pOldBrush);
 	brush.DeleteObject();
 
@@ -389,10 +390,8 @@ void CPSD_1Dlg::OnTimer(UINT_PTR nIDEvent)
 void CPSD_1Dlg::OnBnClickedKaishicaiji()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	if( ERROR_CANUSB_OK==m_pPort->Transmit(msg_obj_7))           //向底层传达发送数据命令
-	{
-		AfxBeginThread(ThreadFun,this);
-		SetTimer(TID, 1, NULL);
+	
+		
 		//确定多媒体定时器提供的最大和最小定时器事件周期
 
 		timeGetDevCaps(&ts, sizeof(ts));
@@ -406,12 +405,9 @@ void CPSD_1Dlg::OnBnClickedKaishicaiji()
 		//启动定时器事件，设置定时周期为1ms，分辨率是1毫秒
 		
 		timerID = timeSetEvent(1,1,TimeProc,NULL,TIME_PERIODIC);
-	}
-	else
-	{
-		MessageBox(_T("发送数据失败!"), _T("错误!"), MB_ICONERROR); 
+	
 
-	}
+	
 }
 
 void CPSD_1Dlg::OnStop()                    //停止采集
@@ -455,8 +451,13 @@ UINT CPSD_1Dlg::ThreadFun(LPVOID para)
 
 int CPSD_1Dlg::ThreadFunKernal()
 {
+	DWORD start,end;
+	int n=0;
+	start=GetTickCount();
+	
+
 	CanMsgObject msg_obj;
-	while(1)                                                                // 读数据，显示
+	while(m_bConnect == TRUE)                                                                // 读数据，显示
 	{
 		if (ERROR_CANUSB_OK == m_pPort->Receive(msg_obj))
 		{
@@ -486,22 +487,27 @@ int CPSD_1Dlg::ThreadFunKernal()
 			int iIndex = msg_obj.msg[3] & 0x0F;
 
 			// 将位置信息取出来
-			if(m_iType == 1&&iIndex==0)
-			{
+//			if(iIndex==0)
+//			{
 
-                *m_iChX=(int)((float)_msg.x[1]/10/0.8275-*m_iChXZL+0.5);
-				*m_iChY=(int)((float)_msg.x[0]/10/0.8412-*m_iChYZL+0.5);
+                *m_iChX=(int)((float)_msg.x[0]/10/0.8275-*m_iChXZL+0.5);
+				*m_iChY=(int)((float)_msg.x[1]/10/0.8412-*m_iChYZL+0.5);
 
-
+				pthis->vec_x.push_back(*pthis->m_iChX);
+				pthis->vec_y.push_back(*pthis->m_iChY);
 				
 
 //				*m_iAngleA=(int)(((float)*m_iChX*324)/(m_Length*PI)+0.5);                  // s=2l*b;          
 //				*m_iAngleB=(int)(((float)*m_iChY*324)/(m_Length*PI)+0.5);
 
-			}
+//			}
+			n++;
 		}
 	}
-
+	end=GetTickCount();
+	tempfile.open("time.txt");
+	tempfile<<"接收"<<n<<"个包耗时"<<end-start<<"ms";
+	tempfile.close();
 	return 0;
 }
 
@@ -534,7 +540,23 @@ void CPSD_1Dlg::OnBnClickedLianjieshebei()
 		if (m_pPort->Init(BAUD_1000_KBPS))
 		{
 			m_bConnect = TRUE; 
+			AfxBeginThread(ThreadFun,this);
+		    SetTimer(TID, 1, NULL);
+		    //确定多媒体定时器提供的最大和最小定时器事件周期
 
+		    timeGetDevCaps(&ts, sizeof(ts));
+
+		    wTimerRes = 1;
+
+		    //建立最小定时器精度
+
+			timeBeginPeriod(wTimerRes);
+
+			//启动定时器事件，设置定时周期为1ms，分辨率是1毫秒
+		
+			timerID = timeSetEvent(1,1,TimeProc,NULL,TIME_PERIODIC);
+	
+	
 		}
 		else
 		{
@@ -582,8 +604,8 @@ void CPSD_1Dlg::OnDestroy()
 	timeEndPeriod(wTimerRes);
 
 	COleDateTime m_odtTime = COleDateTime::GetCurrentTime();//得到当前时间
-	string str1=m_odtTime.Format("%H-%M-%S");
-	string str2=m_odtTime.Format("%H:%M:%S");
+	string str1=m_odtTime.Format("%m月%d_%H时%M分%S秒");
+	string str2=m_odtTime.Format("%m月%d_%H:%M:%S");
 	fout.open("PSD数据"+str1+".csv");
 	fout<<str2<<'\t'
 		<<'\n';	
@@ -607,8 +629,8 @@ void CALLBACK CPSD_1Dlg::TimeProc(UINT uID,UINT uMsg,DWORD dwUsers,DWORD dw1,DWO
 {
 //	pthis->UpdateData(FALSE);
 	pthis->HuiZhiZuoBiaoXi();
-	pthis->vec_x.push_back(*pthis->m_iChX);
-	pthis->vec_y.push_back(*pthis->m_iChY);
+//	pthis->vec_x.push_back(*pthis->m_iChX);
+//	pthis->vec_y.push_back(*pthis->m_iChY);
 }
 
 
@@ -657,3 +679,11 @@ void CPSD_1Dlg::InactWithLabview(void)
 
 
 
+
+
+void CPSD_1Dlg::OnBnClickedCancel()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CDialogEx::OnCancel();
+	OnStop();
+}

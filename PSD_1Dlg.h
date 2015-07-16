@@ -114,4 +114,5 @@ public:
 	UINT wTimerRes;
 	UINT timerID;
 	TIMECAPS ts;
+	afx_msg void OnBnClickedCancel();
 };
