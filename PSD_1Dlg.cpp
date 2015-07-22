@@ -424,22 +424,6 @@ void CPSD_1Dlg::OnStop()                    //停止采集
 	//清除最小定时器精度
 
 	timeEndPeriod(wTimerRes);
-	COleDateTime m_odtTime = COleDateTime::GetCurrentTime();//得到当前时间
-	string str1=m_odtTime.Format("%H-%M-%S");
-	string str2=m_odtTime.Format("%H:%M:%S");
-	fout.open("PSD数据"+str1+".csv");
-	fout<<str2<<'\t'
-		<<'\n';	
-	fout<<"x"<<','
-	    <<"y"<<','
-		<<'\n';
-	for(int i=0;i<vec_x.size();i++)
-	{
-		fout<<vec_x[i]<<','
-	        <<vec_y[i]<<','
-		    <<'\n';
-	}
-	fout.close();
 }
 
 UINT CPSD_1Dlg::ThreadFun(LPVOID para)
@@ -490,8 +474,8 @@ int CPSD_1Dlg::ThreadFunKernal()
 //			if(iIndex==0)
 //			{
 
-                *m_iChX=(int)((float)_msg.x[0]/10/0.8275-*m_iChXZL+0.5);
-				*m_iChY=(int)((float)_msg.x[1]/10/0.8412-*m_iChYZL+0.5);
+                *m_iChX=(int)((float)_msg.x[0]/10/0.8275/0.8175-*m_iChXZL+0.5);
+				*m_iChY=(int)((float)_msg.x[1]/10/0.8412/0.84-*m_iChYZL+0.5);
 
 				pthis->vec_x.push_back(*pthis->m_iChX);
 				pthis->vec_y.push_back(*pthis->m_iChY);
