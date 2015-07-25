@@ -20,10 +20,8 @@ using namespace std;
 #define PI  3.1415926
 
 fstream file;
-ofstream file1;
 ofstream fout;
 ofstream tempfile;
-
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -75,10 +73,10 @@ CPSD_1Dlg::CPSD_1Dlg(CWnd* pParent /*=NULL*/)
 	, angle0(0)
 	, angle1(0)
 	, angle2(0)
-	, h(1.5)
+	, h(1.76)
 	, yucecanshu(0)
 	, ReAngle(0)
-	, NoAngle(0)
+	, NormAngle(0)
 	, flag(0)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
@@ -181,7 +179,7 @@ BOOL CPSD_1Dlg::OnInitDialog()
 //	file.open("Inact.txt");
 //	SetTimer(TIME4,1,NULL);
 	
-
+	OffsetCorrection();
 //	SetTimer(TIME5,1,NULL);
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -617,13 +615,15 @@ void CALLBACK CPSD_1Dlg::TimeProc(UINT uID,UINT uMsg,DWORD dwUsers,DWORD dw1,DWO
 //	pthis->vec_y.push_back(*pthis->m_iChY);
 }
 
-
-
+//angle0是上一时刻振镜弧度值
+//angle1是当前时刻振镜弧度值
+//angle2是下一时刻振镜弧度值
 void CPSD_1Dlg::InactWithLabview(void)
 {
 	double tempangle;
 	string line;
 	string line2;
+	file.open("Inact.txt");
 	if(file.is_open())
 	{
 		file.seekg(0);
@@ -635,7 +635,7 @@ void CPSD_1Dlg::InactWithLabview(void)
 			istringstream istr2(line2);
     		while( !istr.eof() )
     		{
-      			istr >> tempangle ;
+      			istr >> tempangle ;//tempangle的单位是弧度
         		cout << tempangle << '\t' ;		     	
    			}
 			while( !istr2.eof() )
@@ -644,21 +644,23 @@ void CPSD_1Dlg::InactWithLabview(void)
         		cout << flag<< endl ;	
 			}
 		}
-		if(flag==1)//角度需要改变
+		if(flag==1)//弧度需要改变
 		{
 			file.seekg(0);
-			angle0=angle1;
+			angle0=angle1;//angle0、1、2的单位都是弧度
 			angle1=tempangle;
-			ReAngle=atan((*m_iChX+h*tan(2*angle1))/h);
-			NoAngle=angle1+ReAngle/2;
-			yucecanshu=(NoAngle/2-angle1)/(angle1-angle0);
-			angle2=angle1+(NoAngle/2-angle1)/yucecanshu;
+//			ReAngle=atan((*m_iChX/(1e6)+h*tan(2*angle1))/h);
+			ReAngle=atan((0.125e-3+h*tan(2*angle1))/h);
+			NormAngle=angle1+ReAngle/2;
+			yucecanshu=(NormAngle/2-angle1)/(angle1-angle0);
+			angle2=angle1+(NormAngle/2-angle1)/yucecanshu;
 			file.seekg(0);
 			file<< angle2 <<endl << 0 ;
 			angle0=angle1;
 			angle1=angle2;
 		}
 	}
+	file.close();
 }
 
 
@@ -670,4 +672,51 @@ void CPSD_1Dlg::OnBnClickedCancel()
 	// TODO: 在此添加控件通知处理程序代码
 	CDialogEx::OnCancel();
 	OnStop();
+}
+
+
+void CPSD_1Dlg::OffsetCorrection(void)//纠偏算法
+{
+	double tempangle;
+	string line;
+	string line2;
+	file.open("Inact.txt");
+	if(file.is_open())
+	{
+		file.seekg(0);
+		while(!file.eof())
+		{
+			getline(file, line, '\n');
+			getline(file, line2,'\n');
+			istringstream istr(line);
+			istringstream istr2(line2);
+    		while( !istr.eof() )
+    		{
+      			istr >> tempangle ;//tempangle的单位是弧度
+        		cout << tempangle << '\t' ;		     	
+   			}
+			while( !istr2.eof() )
+			{
+				istr2 >> flag ;
+        		cout << flag<< endl ;	
+			}
+		}
+		if(flag==1)//弧度需要改变
+		{
+			file.seekg(0);
+			angle0=angle1;//angle0、1、2的单位都是弧度
+			angle1=tempangle/180*PI;
+//			ReAngle=atan((*m_iChX/(1e6)+h*tan(2*angle1))/h);
+			ReAngle=atan((0.125e-3+h*tan(2*angle1))/h);
+			NormAngle=angle1+ReAngle/2;
+//			yucecanshu=(NormAngle/2-angle1)/(angle1-angle0);
+			yucecanshu=2;
+			angle2=angle1+(NormAngle-angle1)/yucecanshu;
+			file.seekg(0);
+			file<< angle2/PI*180  <<endl << 0 ;
+			angle0=angle1;
+			angle1=angle2;
+		}
+	}
+	file.close();
 }

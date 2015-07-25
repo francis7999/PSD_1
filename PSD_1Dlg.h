@@ -104,7 +104,7 @@ public:
 	double h;
 	double yucecanshu;
 	double ReAngle;
-	double NoAngle;
+	double NormAngle;
 	int flag;
 	void InactWithLabview(void);
 	vector<int> vec_x;
@@ -115,4 +115,5 @@ public:
 	UINT timerID;
 	TIMECAPS ts;
 	afx_msg void OnBnClickedCancel();
+	void OffsetCorrection(void);
 };
